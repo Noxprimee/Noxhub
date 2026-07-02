@@ -9,7 +9,7 @@
     <link rel="icon" type="image/png" href="https://files.catbox.moe/sfpupx.png">
     <link rel="apple-touch-icon" href="https://files.catbox.moe/sfpupx.png">
     
-    <!-- ===== MÉTADONNÉES SEO avec logo ===== -->
+    <!-- ===== MÉTADONNÉES SEO ===== -->
     <meta property="og:title" content="NOX HUB - Streaming Gratuit">
     <meta property="og:description" content="Regardez des films et séries en illimité sur NOX HUB.">
     <meta property="og:type" content="website">
@@ -23,8 +23,9 @@
     <meta name="twitter:image" content="https://files.catbox.moe/sfpupx.png">
     <meta name="theme-color" content="#e50914">
     <meta name="description" content="NOX HUB - Plateforme de streaming gratuite. Regardez des films et séries en illimité.">
-    <meta name="keywords" content="streaming, films, séries, gratuit, NOX HUB, cinéma">
-    <meta name="author" content="NOX HUB">
+
+    <!-- ===== GOOGLE SIGN-IN ===== -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 
     <style>
         /* ===== RESET & BASE ===== */
@@ -704,6 +705,14 @@
             min-height: 20px;
         }
 
+        /* ===== GOOGLE ONE-TAP ===== */
+        #google-one-tap-container {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            z-index: 600;
+        }
+
         /* ===== DETAIL PAGE ===== */
         .detail-page {
             display: none;
@@ -1134,6 +1143,9 @@
     <!-- ===== TOAST ===== -->
     <div class="toast" id="toast"></div>
 
+    <!-- ===== GOOGLE ONE-TAP ===== -->
+    <div id="google-one-tap-container"></div>
+
     <!-- ===== AUTH OVERLAY ===== -->
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-modal">
@@ -1317,6 +1329,9 @@
         const POPULAR_API = `${BASE_URL}/popular-searches`;
         const STREAM_API = `${BASE_URL}/stream`;
 
+        // ===== GOOGLE AUTH CONFIG =====
+        const GOOGLE_CLIENT_ID = '530968593138-gobv77c9dropth023eao4atleki7mrbv.apps.googleusercontent.com';
+
         let currentQuery = '';
         let currentPage = 1;
         let currentType = 'all';
@@ -1337,7 +1352,99 @@
         let userRatings = JSON.parse(localStorage.getItem('noxhub_ratings') || '{}');
 
         // ============================================================
-        //  AUTHENTIFICATION
+        //  GOOGLE ONE-TAP SIGN-IN
+        // ============================================================
+        function initGoogleOneTap() {
+            if (typeof google !== 'undefined' && google.accounts) {
+                try {
+                    google.accounts.id.initialize({
+                        client_id: GOOGLE_CLIENT_ID,
+                        callback: handleGoogleCredential,
+                        auto_select: false,
+                        cancel_on_tap_outside: true,
+                        context: 'signin'
+                    });
+                    // Afficher le bouton One-Tap
+                    google.accounts.id.prompt((notification) => {
+                        if (notification.isNotDisplayed()) {
+                            console.log('One-Tap non affiché:', notification.getNotDisplayedReason());
+                        }
+                    });
+                } catch (e) {
+                    console.log('Erreur Google One-Tap:', e);
+                }
+            }
+        }
+
+        function handleGoogleCredential(response) {
+            try {
+                // Décoder le token JWT
+                const payload = parseJwt(response.credential);
+                
+                const googleUser = {
+                    email: payload.email,
+                    name: payload.name || payload.given_name || payload.email.split('@')[0],
+                    avatar: payload.picture || null,
+                    googleId: payload.sub
+                };
+
+                // Sauvegarder l'utilisateur
+                const users = JSON.parse(localStorage.getItem('noxhub_users') || '[]');
+                if (!users.some(u => u.email === googleUser.email)) {
+                    users.push({
+                        email: googleUser.email,
+                        password: 'google_oauth_' + Date.now(),
+                        name: googleUser.name,
+                        avatar: googleUser.avatar,
+                        googleId: googleUser.googleId
+                    });
+                    localStorage.setItem('noxhub_users', JSON.stringify(users));
+                }
+
+                currentUser = googleUser;
+                localStorage.setItem('noxhub_user', JSON.stringify(currentUser));
+                updateAuthUI();
+                closeAuth();
+                showToast(`Bienvenue ${currentUser.name} !`, 'success');
+
+            } catch (error) {
+                console.error('Erreur Google:', error);
+                showToast('Erreur de connexion Google', 'error');
+            }
+        }
+
+        function parseJwt(token) {
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            return JSON.parse(atob(base64));
+        }
+
+        // ============================================================
+        //  LOGIN AVEC GOOGLE (bouton)
+        // ============================================================
+        function loginWithGoogle() {
+            if (typeof google !== 'undefined' && google.accounts) {
+                try {
+                    // Réinitialiser l'état One-Tap
+                    google.accounts.id.prompt();
+                } catch (e) {
+                    console.log('Erreur:', e);
+                    showToast('Erreur de connexion Google', 'error');
+                }
+            } else {
+                showToast('Chargement de Google...', 'info');
+                // Charger le script Google si nécessaire
+                const script = document.createElement('script');
+                script.src = 'https://accounts.google.com/gsi/client';
+                script.onload = () => {
+                    setTimeout(initGoogleOneTap, 500);
+                };
+                document.head.appendChild(script);
+            }
+        }
+
+        // ============================================================
+        //  AUTHENTIFICATION CLASSIQUE
         // ============================================================
         function openAuth() {
             document.getElementById('authOverlay').classList.add('active');
@@ -1429,41 +1536,6 @@
                     }, 800);
                 }
             }, 800);
-        }
-
-        // ============================================================
-        //  AUTHENTIFICATION GOOGLE
-        // ============================================================
-        function loginWithGoogle() {
-            // Simulation de connexion Google (à remplacer par l'API Google réelle)
-            showToast('Connexion Google en cours...', 'info');
-
-            // Simuler une réponse Google
-            setTimeout(() => {
-                const googleUser = {
-                    email: 'utilisateur.google@gmail.com',
-                    name: 'Utilisateur Google',
-                    avatar: 'https://ui-avatars.com/api/?name=Google+User&background=e50914&color=fff&size=32'
-                };
-
-                // Vérifier si l'utilisateur existe déjà
-                const users = JSON.parse(localStorage.getItem('noxhub_users') || '[]');
-                if (!users.some(u => u.email === googleUser.email)) {
-                    users.push({
-                        email: googleUser.email,
-                        password: 'google_oauth_' + Date.now(),
-                        name: googleUser.name,
-                        avatar: googleUser.avatar
-                    });
-                    localStorage.setItem('noxhub_users', JSON.stringify(users));
-                }
-
-                currentUser = googleUser;
-                localStorage.setItem('noxhub_user', JSON.stringify(currentUser));
-                updateAuthUI();
-                closeAuth();
-                showToast(`Bienvenue ${currentUser.name} !`, 'success');
-            }, 1000);
         }
 
         function logout() {
@@ -2298,6 +2370,21 @@
             loadHomepage();
             updateAuthUI();
 
+            // Initialiser Google One-Tap après un délai
+            setTimeout(() => {
+                if (typeof google !== 'undefined') {
+                    initGoogleOneTap();
+                } else {
+                    // Charger Google si pas déjà fait
+                    const script = document.createElement('script');
+                    script.src = 'https://accounts.google.com/gsi/client';
+                    script.onload = () => {
+                        setTimeout(initGoogleOneTap, 500);
+                    };
+                    document.head.appendChild(script);
+                }
+            }, 1000);
+
             document.getElementById('searchInput').addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') searchMovies();
             });
@@ -2365,6 +2452,7 @@
         window.togglePlayPause = togglePlayPause;
         window.toggleFullscreen = toggleFullscreen;
         window.showToast = showToast;
+        window.initGoogleOneTap = initGoogleOneTap;
     </script>
 
 </body>
