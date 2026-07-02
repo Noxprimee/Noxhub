@@ -5,18 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOX HUB - Streaming</title>
     
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='https://files.catbox.moe/sfpupx.png' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%23e50914'>⏭</text></svg>">
+    <!-- ===== LOGO / FAVICON ===== -->
+    <link rel="icon" type="image/png" href="https://files.catbox.moe/sfpupx.png">
+    <link rel="apple-touch-icon" href="https://files.catbox.moe/sfpupx.png">
     
-    <!-- Métadonnées SEO -->
-    <meta name="description" content="NOX HUB - Plateforme de streaming gratuite. Regardez des films et séries en illimité.">
-    <meta name="keywords" content="streaming, films, séries, gratuit, NOX HUB, cinéma">
-    <meta name="author" content="NOX HUB">
+    <!-- ===== MÉTADONNÉES SEO avec logo ===== -->
     <meta property="og:title" content="NOX HUB - Streaming Gratuit">
     <meta property="og:description" content="Regardez des films et séries en illimité sur NOX HUB.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://dash.noxhub.wuaze.com">
+    <meta property="og:image" content="https://files.catbox.moe/sfpupx.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="NOX HUB - Streaming Gratuit">
+    <meta name="twitter:description" content="Regardez des films et séries en illimité sur NOX HUB.">
+    <meta name="twitter:image" content="https://files.catbox.moe/sfpupx.png">
     <meta name="theme-color" content="#e50914">
+    <meta name="description" content="NOX HUB - Plateforme de streaming gratuite. Regardez des films et séries en illimité.">
+    <meta name="keywords" content="streaming, films, séries, gratuit, NOX HUB, cinéma">
+    <meta name="author" content="NOX HUB">
 
     <style>
         /* ===== RESET & BASE ===== */
@@ -69,7 +77,7 @@
         /* ===== NAVBAR ===== */
         .navbar {
             background: linear-gradient(to bottom, rgba(0, 0, 0, 0.95), transparent);
-            padding: 15px 50px;
+            padding: 12px 50px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -84,14 +92,24 @@
             box-shadow: 0 2px 15px rgba(0, 0, 0, 0.8);
         }
         .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .logo img {
+            height: 40px;
+            width: auto;
+            border-radius: 8px;
+        }
+        .logo-text {
             font-size: 28px;
             font-weight: 900;
             color: #e50914;
             letter-spacing: 2px;
-            cursor: pointer;
             font-family: 'Segoe UI', sans-serif;
         }
-        .logo span {
+        .logo-text span {
             color: #fff;
             font-weight: 300;
         }
@@ -160,6 +178,12 @@
             justify-content: center;
             font-weight: bold;
             font-size: 14px;
+            overflow: hidden;
+        }
+        .nav-links .user-info .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
         .nav-links .user-info .logout-btn {
             color: #888;
@@ -181,7 +205,7 @@
             display: flex;
             align-items: center;
             padding: 0 60px;
-            margin-top: 70px;
+            margin-top: 64px;
             position: relative;
         }
         .hero::after {
@@ -196,6 +220,10 @@
         .hero-content {
             max-width: 550px;
             z-index: 1;
+        }
+        .hero-content .hero-logo {
+            height: 60px;
+            margin-bottom: 15px;
         }
         .hero-content h1 {
             font-size: 52px;
@@ -496,7 +524,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             z-index: 500;
             justify-content: center;
             align-items: center;
@@ -514,6 +542,8 @@
             position: relative;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
             border: 1px solid #333;
+            max-height: 90vh;
+            overflow-y: auto;
         }
         .auth-modal .close-auth {
             position: absolute;
@@ -532,12 +562,21 @@
         }
         .auth-modal .auth-logo {
             text-align: center;
-            font-size: 28px;
-            font-weight: 900;
-            color: #e50914;
             margin-bottom: 10px;
         }
-        .auth-modal .auth-logo span {
+        .auth-modal .auth-logo img {
+            height: 50px;
+            width: auto;
+            border-radius: 10px;
+        }
+        .auth-modal .auth-logo-text {
+            text-align: center;
+            font-size: 24px;
+            font-weight: 900;
+            color: #e50914;
+            margin-top: 5px;
+        }
+        .auth-modal .auth-logo-text span {
             color: #fff;
             font-weight: 300;
         }
@@ -596,6 +635,45 @@
             opacity: 0.6;
             cursor: not-allowed;
             transform: none;
+        }
+        .auth-modal .auth-divider {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin: 20px 0;
+            color: #666;
+            font-size: 13px;
+        }
+        .auth-modal .auth-divider::before,
+        .auth-modal .auth-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: #333;
+        }
+        .auth-modal .google-btn {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #2a2a2a;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .auth-modal .google-btn:hover {
+            background: #333;
+            border-color: #555;
+        }
+        .auth-modal .google-btn img {
+            width: 20px;
+            height: 20px;
         }
         .auth-modal .auth-switch {
             text-align: center;
@@ -949,6 +1027,9 @@
             .hero-content h1 {
                 font-size: 32px;
             }
+            .hero-content .hero-logo {
+                height: 40px;
+            }
             .movie-section {
                 padding: 20px;
             }
@@ -956,17 +1037,23 @@
                 grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             }
             .navbar {
-                padding: 12px 20px;
+                padding: 10px 20px;
+            }
+            .logo img {
+                height: 30px;
+            }
+            .logo-text {
+                font-size: 20px;
             }
             .nav-links {
-                gap: 12px;
+                gap: 10px;
             }
             .nav-links a {
-                font-size: 12px;
+                font-size: 11px;
             }
             .nav-links .auth-btn {
-                padding: 6px 14px;
-                font-size: 11px;
+                padding: 5px 12px;
+                font-size: 10px;
             }
             .search-bar input {
                 min-width: 120px;
@@ -992,7 +1079,7 @@
                 padding: 4px 12px;
             }
             .auth-modal {
-                padding: 30px 20px;
+                padding: 25px 20px;
             }
             .player-controls {
                 padding: 8px 15px;
@@ -1008,15 +1095,18 @@
             }
         }
         @media (max-width: 480px) {
-            .logo {
-                font-size: 20px;
+            .logo-text {
+                font-size: 16px;
+            }
+            .logo img {
+                height: 25px;
             }
             .nav-links a {
-                font-size: 10px;
+                font-size: 9px;
             }
             .nav-links .auth-btn {
-                padding: 4px 10px;
-                font-size: 10px;
+                padding: 3px 8px;
+                font-size: 9px;
             }
             .hero-content h1 {
                 font-size: 24px;
@@ -1048,8 +1138,24 @@
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-modal">
             <button class="close-auth" onclick="closeAuth()">✕</button>
-            <div class="auth-logo">NOX <span>HUB</span></div>
+            <div class="auth-logo">
+                <img src="https://files.catbox.moe/sfpupx.png" alt="NOX HUB">
+            </div>
+            <div class="auth-logo-text">NOX <span>HUB</span></div>
             <div class="auth-subtitle" id="authSubtitle">Connectez-vous pour accéder à vos contenus</div>
+
+            <!-- Bouton Google -->
+            <button class="google-btn" onclick="loginWithGoogle()">
+                <svg width="20" height="20" viewBox="0 0 48 48">
+                    <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+                    <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+                    <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+                    <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+                </svg>
+                Continuer avec Google
+            </button>
+
+            <div class="auth-divider">ou</div>
 
             <form id="authForm" onsubmit="handleAuth(event)">
                 <div class="form-group">
@@ -1077,7 +1183,10 @@
 
     <!-- ===== NAVBAR ===== -->
     <nav class="navbar" id="navbar">
-        <div class="logo" onclick="loadHomepage()">NOX <span>HUB</span></div>
+        <div class="logo" onclick="loadHomepage()">
+            <img src="https://files.catbox.moe/sfpupx.png" alt="NOX HUB">
+            <span class="logo-text">NOX <span>HUB</span></span>
+        </div>
         <div class="nav-links">
             <a class="active" data-page="home" onclick="loadHomepage()">Accueil</a>
             <a data-page="movies" onclick="loadCategory('movie')">Films</a>
@@ -1091,6 +1200,7 @@
     <!-- ===== HERO ===== -->
     <section class="hero" id="heroSection">
         <div class="hero-content">
+            <img src="https://files.catbox.moe/sfpupx.png" alt="NOX HUB" class="hero-logo">
             <h1>L'<span class="highlight">évasion</span> commence ici</h1>
             <p>Plonge dans une collection infinie de films, séries et documentaires. NOX HUB, ton nouveau rendez-vous streaming.</p>
             <div class="hero-buttons">
@@ -1282,15 +1392,13 @@
             submitBtn.disabled = true;
             submitBtn.textContent = 'Chargement...';
 
-            // Simulation d'authentification (à remplacer par une vraie API)
             setTimeout(() => {
                 if (isLoginMode) {
-                    // Login
                     const users = JSON.parse(localStorage.getItem('noxhub_users') || '[]');
                     const user = users.find(u => u.email === email && u.password === password);
 
                     if (user) {
-                        currentUser = { email: user.email, name: user.name };
+                        currentUser = { email: user.email, name: user.name, avatar: user.avatar || null };
                         localStorage.setItem('noxhub_user', JSON.stringify(currentUser));
                         successEl.textContent = 'Connexion réussie !';
                         updateAuthUI();
@@ -1302,23 +1410,18 @@
                         submitBtn.textContent = 'Se connecter';
                     }
                 } else {
-                    // Register
                     const users = JSON.parse(localStorage.getItem('noxhub_users') || '[]');
-
                     if (users.some(u => u.email === email)) {
                         errorEl.textContent = 'Cet email est déjà utilisé.';
                         submitBtn.disabled = false;
                         submitBtn.textContent = 'S\'inscrire';
                         return;
                     }
-
-                    users.push({ email, password, name });
+                    users.push({ email, password, name, avatar: null });
                     localStorage.setItem('noxhub_users', JSON.stringify(users));
-
-                    currentUser = { email, name };
+                    currentUser = { email, name, avatar: null };
                     localStorage.setItem('noxhub_user', JSON.stringify(currentUser));
                     successEl.textContent = 'Compte créé avec succès !';
-
                     setTimeout(() => {
                         updateAuthUI();
                         closeAuth();
@@ -1326,6 +1429,41 @@
                     }, 800);
                 }
             }, 800);
+        }
+
+        // ============================================================
+        //  AUTHENTIFICATION GOOGLE
+        // ============================================================
+        function loginWithGoogle() {
+            // Simulation de connexion Google (à remplacer par l'API Google réelle)
+            showToast('Connexion Google en cours...', 'info');
+
+            // Simuler une réponse Google
+            setTimeout(() => {
+                const googleUser = {
+                    email: 'utilisateur.google@gmail.com',
+                    name: 'Utilisateur Google',
+                    avatar: 'https://ui-avatars.com/api/?name=Google+User&background=e50914&color=fff&size=32'
+                };
+
+                // Vérifier si l'utilisateur existe déjà
+                const users = JSON.parse(localStorage.getItem('noxhub_users') || '[]');
+                if (!users.some(u => u.email === googleUser.email)) {
+                    users.push({
+                        email: googleUser.email,
+                        password: 'google_oauth_' + Date.now(),
+                        name: googleUser.name,
+                        avatar: googleUser.avatar
+                    });
+                    localStorage.setItem('noxhub_users', JSON.stringify(users));
+                }
+
+                currentUser = googleUser;
+                localStorage.setItem('noxhub_user', JSON.stringify(currentUser));
+                updateAuthUI();
+                closeAuth();
+                showToast(`Bienvenue ${currentUser.name} !`, 'success');
+            }, 1000);
         }
 
         function logout() {
@@ -1338,9 +1476,13 @@
         function updateAuthUI() {
             const navBtn = document.getElementById('authNavBtn');
             if (currentUser) {
+                const avatarHtml = currentUser.avatar ?
+                    `<img src="${currentUser.avatar}" alt="${currentUser.name}">` :
+                    currentUser.name.charAt(0).toUpperCase();
+
                 navBtn.innerHTML = `
                     <span class="user-info">
-                        <span class="avatar">${currentUser.name.charAt(0).toUpperCase()}</span>
+                        <span class="avatar">${avatarHtml}</span>
                         ${currentUser.name}
                         <span class="logout-btn" onclick="event.stopPropagation(); logout();">✕</span>
                     </span>
@@ -1421,7 +1563,7 @@
 
                 if (data.status !== 'success') {
                     grid.innerHTML =
-                    `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
+                        `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
                     return;
                 }
 
@@ -1478,7 +1620,7 @@
 
                 if (data.status !== 'success') {
                     grid.innerHTML =
-                    `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
+                        `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
                     return;
                 }
 
@@ -1518,7 +1660,7 @@
 
                 if (data.status !== 'success') {
                     grid.innerHTML =
-                    `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
+                        `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
                     return;
                 }
 
@@ -1556,7 +1698,7 @@
 
                 if (data.status !== 'success') {
                     grid.innerHTML =
-                    `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
+                        `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
                     return;
                 }
 
@@ -1630,7 +1772,6 @@
                 updateFilters();
                 loadGenres();
 
-                // Sauvegarder la recherche
                 try {
                     await fetch(`${POPULAR_API}?apikey=${API_KEY}&search=${encodeURIComponent(query)}`, { method: 'POST' });
                 } catch (e) {}
@@ -1795,7 +1936,6 @@
                 btnAddList.textContent = isInList ? '★ Dans ma liste' : '+ Ajouter à ma liste';
                 btnAddList.classList.toggle('added', isInList);
 
-                // Afficher la note de l'utilisateur
                 const userRating = userRatings[id] || 0;
                 document.querySelectorAll('#ratingStars span').forEach((star, index) => {
                     star.classList.toggle('active', index < userRating);
@@ -1805,7 +1945,6 @@
                 document.getElementById('detailPage').classList.add('active');
                 document.body.style.overflow = 'hidden';
 
-                // Détails
                 if (id) {
                     try {
                         const detailUrl = `${DETAIL_API}?apikey=${API_KEY}&subjectId=${id}`;
@@ -1963,7 +2102,6 @@
         async function watchVideo() {
             if (!selectedItem) return;
 
-            // Vérifier si l'utilisateur est connecté
             if (!currentUser) {
                 showToast('Connectez-vous pour regarder', 'error');
                 openAuth();
@@ -2030,9 +2168,7 @@
                     return;
                 }
 
-                // Ajouter à l'historique
                 addToHistory(selectedItem);
-
                 closeDetail();
                 openPlayer(videoUrl, selectedItem.title);
 
@@ -2051,7 +2187,6 @@
         // ============================================================
         function watchTrailer() {
             if (!selectedItem) return;
-            // Recherche simulée - à connecter à une vraie API YouTube
             showToast('Fonctionnalité de bande-annonce en développement', 'info');
         }
 
@@ -2072,7 +2207,6 @@
             page.classList.add('active');
             video.load();
 
-            // Configurer la progression
             setupPlayerControls();
 
             video.play().then(() => {
@@ -2168,7 +2302,6 @@
                 if (e.key === 'Enter') searchMovies();
             });
 
-            // Raccourcis clavier
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     if (document.getElementById('playerPage').classList.contains('active')) {
@@ -2180,7 +2313,6 @@
                     }
                 }
 
-                // Contrôles du lecteur
                 if (document.getElementById('playerPage').classList.contains('active')) {
                     if (e.key === ' ' || e.key === 'Space') {
                         e.preventDefault();
@@ -2197,7 +2329,6 @@
                     }
                 }
 
-                // Navigation
                 if (e.ctrlKey && e.key === '1') loadHomepage();
                 if (e.ctrlKey && e.key === '2') loadCategory('movie');
                 if (e.ctrlKey && e.key === '3') loadCategory('tv');
@@ -2230,6 +2361,7 @@
         window.handleAuth = handleAuth;
         window.toggleAuthMode = toggleAuthMode;
         window.logout = logout;
+        window.loginWithGoogle = loginWithGoogle;
         window.togglePlayPause = togglePlayPause;
         window.toggleFullscreen = toggleFullscreen;
         window.showToast = showToast;
