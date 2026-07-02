@@ -4,7 +4,22 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NOX HUB - Streaming</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%23e50914'>⏭</text></svg>">
+    
+    <!-- Métadonnées SEO -->
+    <meta name="description" content="NOX HUB - Plateforme de streaming gratuite. Regardez des films et séries en illimité.">
+    <meta name="keywords" content="streaming, films, séries, gratuit, NOX HUB, cinéma">
+    <meta name="author" content="NOX HUB">
+    <meta property="og:title" content="NOX HUB - Streaming Gratuit">
+    <meta property="og:description" content="Regardez des films et séries en illimité sur NOX HUB.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dash.noxhub.wuaze.com">
+    <meta name="theme-color" content="#e50914">
+
     <style>
+        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -13,9 +28,14 @@
         body {
             background-color: #141414;
             color: #fff;
-            font-family: Arial, sans-serif;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            overflow-x: hidden;
         }
-        
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
         /* ===== SCROLLBAR ===== */
         ::-webkit-scrollbar {
             width: 8px;
@@ -29,6 +49,21 @@
         }
         ::-webkit-scrollbar-thumb:hover {
             background: #ff0a16;
+        }
+
+        /* ===== LOADING SPINNER ===== */
+        .spinner {
+            border: 4px solid #333;
+            border-top: 4px solid #e50914;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 0.8s linear infinite;
+            margin: 40px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* ===== NAVBAR ===== */
@@ -50,13 +85,15 @@
         }
         .logo {
             font-size: 28px;
-            font-weight: bold;
+            font-weight: 900;
             color: #e50914;
             letter-spacing: 2px;
             cursor: pointer;
+            font-family: 'Segoe UI', sans-serif;
         }
         .logo span {
             color: #fff;
+            font-weight: 300;
         }
         .nav-links {
             display: flex;
@@ -70,6 +107,7 @@
             transition: 0.3s;
             cursor: pointer;
             position: relative;
+            font-weight: 500;
         }
         .nav-links a:hover {
             color: #fff;
@@ -84,20 +122,60 @@
             background: #e50914;
             transition: width 0.3s;
         }
-        .nav-links a:hover::after {
+        .nav-links a:hover::after,
+        .nav-links a.active::after {
             width: 100%;
         }
         .nav-links a.active {
             color: #fff;
         }
-        .nav-links a.active::after {
-            width: 100%;
+        .nav-links .auth-btn {
+            background: #e50914;
+            padding: 8px 20px;
+            border-radius: 5px;
+            color: #fff !important;
+            font-weight: 600;
+        }
+        .nav-links .auth-btn:hover {
+            background: #f40612;
+            transform: scale(1.05);
+        }
+        .nav-links .auth-btn::after {
+            display: none;
+        }
+        .nav-links .user-info {
+            color: #fff;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links .user-info .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e50914;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .nav-links .user-info .logout-btn {
+            color: #888;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.3s;
+        }
+        .nav-links .user-info .logout-btn:hover {
+            color: #e50914;
         }
 
         /* ===== HERO ===== */
         .hero {
             height: 75vh;
-            background: linear-gradient(77deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 100%), url('https://image.tmdb.org/t/p/original/wwemzKWzjKYJFfCeiB57q3r4Bcm.png');
+            background: linear-gradient(77deg, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0.4) 100%),
+                url('https://image.tmdb.org/t/p/original/wwemzKWzjKYJFfCeiB57q3r4Bcm.png');
             background-size: cover;
             background-position: center;
             display: flex;
@@ -123,6 +201,10 @@
             font-size: 52px;
             margin-bottom: 15px;
             text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+            font-weight: 900;
+        }
+        .hero-content h1 .highlight {
+            color: #e50914;
         }
         .hero-content p {
             font-size: 18px;
@@ -140,7 +222,7 @@
             padding: 12px 35px;
             border-radius: 5px;
             border: none;
-            font-weight: bold;
+            font-weight: 600;
             font-size: 16px;
             cursor: pointer;
             transition: 0.3s;
@@ -154,12 +236,13 @@
             transform: scale(1.05);
         }
         .btn-secondary {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
             color: #fff;
             backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
         }
         .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.25);
             transform: scale(1.05);
         }
 
@@ -177,12 +260,14 @@
         }
         .section-header h2 {
             font-size: 22px;
+            font-weight: 700;
         }
         .section-header .view-all {
             color: #e50914;
             font-size: 14px;
             cursor: pointer;
             transition: 0.3s;
+            font-weight: 500;
         }
         .section-header .view-all:hover {
             color: #ff0a16;
@@ -193,7 +278,7 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .filters button {
             padding: 8px 18px;
@@ -204,12 +289,37 @@
             cursor: pointer;
             transition: 0.3s;
             font-size: 13px;
+            font-weight: 500;
         }
         .filters button:hover,
         .filters button.active {
             background: #e50914;
             color: #fff;
             border-color: #e50914;
+        }
+
+        /* ===== GENRE FILTERS ===== */
+        .genre-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .genre-filters button {
+            padding: 5px 14px;
+            border-radius: 15px;
+            border: 1px solid #333;
+            background: transparent;
+            color: #888;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 12px;
+        }
+        .genre-filters button:hover {
+            background: #e50914;
+            color: #fff;
+            border-color: #e50914;
+            transform: scale(1.05);
         }
 
         /* ===== SEARCH ===== */
@@ -225,18 +335,18 @@
             padding: 12px 20px;
             border-radius: 30px;
             border: none;
-            background: #333;
+            background: #2a2a2a;
             color: #fff;
             font-size: 16px;
             outline: none;
             transition: 0.3s;
         }
         .search-bar input:focus {
-            background: #3a3a3a;
+            background: #333;
             box-shadow: 0 0 0 2px #e50914;
         }
         .search-bar input::placeholder {
-            color: #888;
+            color: #777;
         }
         .search-bar button {
             padding: 12px 30px;
@@ -244,7 +354,7 @@
             border: none;
             background: #e50914;
             color: #fff;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -308,6 +418,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-weight: 600;
         }
         .movie-card .info .meta {
             font-size: 13px;
@@ -331,7 +442,7 @@
             font-size: 11px;
             padding: 3px 10px;
             border-radius: 15px;
-            font-weight: bold;
+            font-weight: 600;
         }
         .movie-card .rating-badge {
             position: absolute;
@@ -342,7 +453,7 @@
             padding: 3px 10px;
             border-radius: 15px;
             font-size: 12px;
-            font-weight: bold;
+            font-weight: 600;
         }
 
         /* ===== PAGINATION ===== */
@@ -359,7 +470,7 @@
             border: none;
             background: #e50914;
             color: #fff;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             transition: 0.3s;
         }
@@ -375,6 +486,144 @@
         .pagination span {
             color: #aaa;
             font-size: 14px;
+        }
+
+        /* ===== AUTH MODALS ===== */
+        .auth-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 500;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+        .auth-overlay.active {
+            display: flex;
+        }
+        .auth-modal {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 420px;
+            width: 90%;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.9);
+            border: 1px solid #333;
+        }
+        .auth-modal .close-auth {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #888;
+            background: none;
+            border: none;
+            transition: 0.3s;
+        }
+        .auth-modal .close-auth:hover {
+            color: #fff;
+            transform: rotate(90deg);
+        }
+        .auth-modal .auth-logo {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 900;
+            color: #e50914;
+            margin-bottom: 10px;
+        }
+        .auth-modal .auth-logo span {
+            color: #fff;
+            font-weight: 300;
+        }
+        .auth-modal .auth-subtitle {
+            text-align: center;
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .auth-modal .form-group {
+            margin-bottom: 18px;
+        }
+        .auth-modal .form-group label {
+            display: block;
+            color: #ccc;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .auth-modal .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #2a2a2a;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .auth-modal .form-group input:focus {
+            border-color: #e50914;
+            box-shadow: 0 0 0 2px rgba(229, 9, 20, 0.3);
+        }
+        .auth-modal .form-group input::placeholder {
+            color: #666;
+        }
+        .auth-modal .auth-submit {
+            width: 100%;
+            padding: 14px;
+            border-radius: 8px;
+            border: none;
+            background: #e50914;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+        .auth-modal .auth-submit:hover {
+            background: #f40612;
+            transform: scale(1.02);
+        }
+        .auth-modal .auth-submit:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .auth-modal .auth-switch {
+            text-align: center;
+            margin-top: 18px;
+            color: #888;
+            font-size: 14px;
+        }
+        .auth-modal .auth-switch span {
+            color: #e50914;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .auth-modal .auth-switch span:hover {
+            text-decoration: underline;
+        }
+        .auth-modal .auth-error {
+            color: #e50914;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 10px;
+            min-height: 20px;
+        }
+        .auth-modal .auth-success {
+            color: #4CAF50;
+            font-size: 13px;
+            text-align: center;
+            margin-top: 10px;
+            min-height: 20px;
         }
 
         /* ===== DETAIL PAGE ===== */
@@ -437,6 +686,7 @@
         .detail-info h1 {
             font-size: 40px;
             margin-bottom: 10px;
+            font-weight: 900;
         }
         .detail-info .detail-meta {
             font-size: 16px;
@@ -453,7 +703,7 @@
             font-size: 18px;
             line-height: 1.6;
             color: #ddd;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             max-height: 200px;
             overflow-y: auto;
         }
@@ -477,7 +727,7 @@
             border: none;
             padding: 14px 45px;
             font-size: 20px;
-            font-weight: bold;
+            font-weight: 600;
             border-radius: 5px;
             cursor: pointer;
             transition: 0.3s;
@@ -496,35 +746,53 @@
             cursor: wait;
         }
         .detail-info .btn-trailer {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             color: #fff;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.15);
             padding: 14px 30px;
             font-size: 16px;
-            font-weight: bold;
+            font-weight: 600;
             border-radius: 5px;
             cursor: pointer;
             transition: 0.3s;
         }
         .detail-info .btn-trailer:hover {
-            background: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.2);
             transform: scale(1.05);
         }
         .detail-info .btn-add-list {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.08);
             color: #fff;
-            border: none;
+            border: 1px solid rgba(255, 255, 255, 0.1);
             padding: 14px 20px;
             font-size: 16px;
             border-radius: 5px;
             cursor: pointer;
             transition: 0.3s;
+            font-weight: 500;
         }
         .detail-info .btn-add-list:hover {
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.15);
         }
         .detail-info .btn-add-list.added {
             background: #e50914;
+            border-color: #e50914;
+        }
+        .detail-info .rating-stars {
+            display: flex;
+            gap: 8px;
+            margin: 15px 0;
+        }
+        .detail-info .rating-stars span {
+            font-size: 28px;
+            cursor: pointer;
+            color: #555;
+            transition: 0.3s;
+        }
+        .detail-info .rating-stars span:hover,
+        .detail-info .rating-stars span.active {
+            color: #f5c518;
+            transform: scale(1.2);
         }
         .loading-text {
             color: #f5c518;
@@ -553,11 +821,64 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
         }
         .player-container video {
             max-width: 100%;
             max-height: 100%;
             border-radius: 10px;
+        }
+        .player-progress {
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 5px;
+            background: #333;
+            border-radius: 3px;
+            cursor: pointer;
+            z-index: 5;
+        }
+        .player-progress .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: #e50914;
+            border-radius: 3px;
+            transition: width 0.1s;
+        }
+        .player-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            z-index: 5;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 25px;
+            border-radius: 30px;
+        }
+        .player-controls button {
+            background: none;
+            border: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 5px;
+        }
+        .player-controls button:hover {
+            color: #e50914;
+            transform: scale(1.1);
+        }
+        .player-controls .time-display {
+            color: #aaa;
+            font-size: 13px;
+            font-family: monospace;
+            min-width: 100px;
+            text-align: center;
         }
         .close-player {
             position: absolute;
@@ -583,8 +904,9 @@
         }
         .movie-title-player {
             color: #fff;
-            font-size: 24px;
+            font-size: 20px;
             padding: 10px 0 0 20px;
+            font-weight: 600;
         }
 
         /* ===== TOAST ===== */
@@ -592,7 +914,7 @@
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: #333;
+            background: #2a2a2a;
             color: #fff;
             padding: 15px 25px;
             border-radius: 10px;
@@ -601,6 +923,8 @@
             opacity: 0;
             transition: 0.4s;
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            font-size: 14px;
+            max-width: 350px;
         }
         .toast.show {
             transform: translateY(0);
@@ -640,6 +964,10 @@
             .nav-links a {
                 font-size: 12px;
             }
+            .nav-links .auth-btn {
+                padding: 6px 14px;
+                font-size: 11px;
+            }
             .search-bar input {
                 min-width: 120px;
             }
@@ -663,12 +991,31 @@
                 font-size: 11px;
                 padding: 4px 12px;
             }
+            .auth-modal {
+                padding: 30px 20px;
+            }
+            .player-controls {
+                padding: 8px 15px;
+                gap: 12px;
+                bottom: 10px;
+            }
+            .player-controls button {
+                font-size: 16px;
+            }
+            .player-progress {
+                width: 90%;
+                bottom: 55px;
+            }
         }
         @media (max-width: 480px) {
             .logo {
                 font-size: 20px;
             }
             .nav-links a {
+                font-size: 10px;
+            }
+            .nav-links .auth-btn {
+                padding: 4px 10px;
                 font-size: 10px;
             }
             .hero-content h1 {
@@ -685,6 +1032,10 @@
                 width: 100%;
                 justify-content: center;
             }
+            .genre-filters button {
+                font-size: 10px;
+                padding: 4px 10px;
+            }
         }
     </style>
 </head>
@@ -692,6 +1043,37 @@
 
     <!-- ===== TOAST ===== -->
     <div class="toast" id="toast"></div>
+
+    <!-- ===== AUTH OVERLAY ===== -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-modal">
+            <button class="close-auth" onclick="closeAuth()">✕</button>
+            <div class="auth-logo">NOX <span>HUB</span></div>
+            <div class="auth-subtitle" id="authSubtitle">Connectez-vous pour accéder à vos contenus</div>
+
+            <form id="authForm" onsubmit="handleAuth(event)">
+                <div class="form-group">
+                    <label for="authEmail">Adresse email</label>
+                    <input type="email" id="authEmail" placeholder="exemple@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="authPassword">Mot de passe</label>
+                    <input type="password" id="authPassword" placeholder="••••••••" required minlength="6">
+                </div>
+                <div class="form-group" id="authNameGroup" style="display:none;">
+                    <label for="authName">Nom d'utilisateur</label>
+                    <input type="text" id="authName" placeholder="Votre nom">
+                </div>
+                <button type="submit" class="auth-submit" id="authSubmit">Se connecter</button>
+                <div id="authError" class="auth-error"></div>
+                <div id="authSuccess" class="auth-success"></div>
+                <div class="auth-switch">
+                    <span id="authSwitchText">Pas encore de compte ?</span>
+                    <span id="authSwitchLink" onclick="toggleAuthMode()">S'inscrire</span>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <!-- ===== NAVBAR ===== -->
     <nav class="navbar" id="navbar">
@@ -701,13 +1083,15 @@
             <a data-page="movies" onclick="loadCategory('movie')">Films</a>
             <a data-page="series" onclick="loadCategory('tv')">Séries</a>
             <a data-page="mylist" onclick="showMyList()">Ma liste</a>
+            <a data-page="history" onclick="showHistory()">Historique</a>
+            <a id="authNavBtn" class="auth-btn" onclick="openAuth()">Se connecter</a>
         </div>
     </nav>
 
     <!-- ===== HERO ===== -->
     <section class="hero" id="heroSection">
         <div class="hero-content">
-            <h1>L'évasion commence ici</h1>
+            <h1>L'<span class="highlight">évasion</span> commence ici</h1>
             <p>Plonge dans une collection infinie de films, séries et documentaires. NOX HUB, ton nouveau rendez-vous streaming.</p>
             <div class="hero-buttons">
                 <button class="btn-primary" onclick="loadHomepage()">Explorer</button>
@@ -732,6 +1116,9 @@
             <button data-filter="top" onclick="applyFilter('top')">Top notés</button>
         </div>
 
+        <!-- Genres -->
+        <div class="genre-filters" id="genreFilters"></div>
+
         <div class="search-bar">
             <input type="text" id="searchInput" placeholder="Rechercher un film, une série...">
             <button onclick="searchMovies()">🔍 Rechercher</button>
@@ -740,7 +1127,7 @@
         <div id="popularSearches" class="popular-searches"></div>
 
         <div class="movie-grid" id="movieGrid">
-            <p style="color:#888; text-align:center; width:100%;">Chargement...</p>
+            <div class="spinner"></div>
         </div>
 
         <div class="pagination" id="pagination" style="display:none;">
@@ -768,10 +1155,19 @@
                 </div>
                 <div class="detail-description" id="detailDescription">Synopsis...</div>
                 <div class="detail-cast" id="detailCast"><strong>Acteurs :</strong> Chargement...</div>
+
+                <div class="rating-stars" id="ratingStars">
+                    <span onclick="rateItem(1)">★</span>
+                    <span onclick="rateItem(2)">★</span>
+                    <span onclick="rateItem(3)">★</span>
+                    <span onclick="rateItem(4)">★</span>
+                    <span onclick="rateItem(5)">★</span>
+                </div>
+
                 <div class="detail-buttons">
                     <button class="btn-watch" id="btnWatch" onclick="watchVideo()">▶ Lire</button>
-                    <button class="btn-trailer" id="btnTrailer" onclick="watchTrailer()">🎬 Bande-annonce</button>
-                    <button class="btn-add-list" id="btnAddList" onclick="toggleMyList()">➕ Ajouter à ma liste</button>
+                    <button class="btn-trailer" id="btnTrailer" onclick="watchTrailer()">▶ Bande-annonce</button>
+                    <button class="btn-add-list" id="btnAddList" onclick="toggleMyList()">+ Ajouter à ma liste</button>
                 </div>
                 <div id="watchMessage" class="loading-text"></div>
             </div>
@@ -786,6 +1182,14 @@
             <video id="videoPlayer" controls autoplay>
                 Votre navigateur ne supporte pas la lecture vidéo.
             </video>
+            <div class="player-progress" id="playerProgress">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="player-controls">
+                <button onclick="togglePlayPause()" id="playPauseBtn">⏸</button>
+                <button onclick="toggleFullscreen()">⛶</button>
+                <span class="time-display" id="timeDisplay">00:00 / 00:00</span>
+            </div>
         </div>
     </div>
 
@@ -811,8 +1215,146 @@
         let selectedItem = null;
         let currentMode = 'homepage';
         let currentFilter = 'all';
-        let myList = JSON.parse(localStorage.getItem('noxhub_mylist') || '[]');
         let allItems = [];
+
+        // ===== AUTH =====
+        let currentUser = JSON.parse(localStorage.getItem('noxhub_user') || 'null');
+        let isLoginMode = true;
+
+        // ===== LISTE & HISTORIQUE =====
+        let myList = JSON.parse(localStorage.getItem('noxhub_mylist') || '[]');
+        let history = JSON.parse(localStorage.getItem('noxhub_history') || '[]');
+        let userRatings = JSON.parse(localStorage.getItem('noxhub_ratings') || '{}');
+
+        // ============================================================
+        //  AUTHENTIFICATION
+        // ============================================================
+        function openAuth() {
+            document.getElementById('authOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+            document.getElementById('authError').textContent = '';
+            document.getElementById('authSuccess').textContent = '';
+            isLoginMode = true;
+            document.getElementById('authSubtitle').textContent = 'Connectez-vous pour accéder à vos contenus';
+            document.getElementById('authSubmit').textContent = 'Se connecter';
+            document.getElementById('authSwitchText').textContent = 'Pas encore de compte ?';
+            document.getElementById('authSwitchLink').textContent = 'S\'inscrire';
+            document.getElementById('authNameGroup').style.display = 'none';
+            document.getElementById('authEmail').value = '';
+            document.getElementById('authPassword').value = '';
+        }
+
+        function closeAuth() {
+            document.getElementById('authOverlay').classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        function toggleAuthMode() {
+            isLoginMode = !isLoginMode;
+            if (isLoginMode) {
+                document.getElementById('authSubtitle').textContent = 'Connectez-vous pour accéder à vos contenus';
+                document.getElementById('authSubmit').textContent = 'Se connecter';
+                document.getElementById('authSwitchText').textContent = 'Pas encore de compte ?';
+                document.getElementById('authSwitchLink').textContent = 'S\'inscrire';
+                document.getElementById('authNameGroup').style.display = 'none';
+            } else {
+                document.getElementById('authSubtitle').textContent = 'Créez votre compte gratuitement';
+                document.getElementById('authSubmit').textContent = 'S\'inscrire';
+                document.getElementById('authSwitchText').textContent = 'Déjà un compte ?';
+                document.getElementById('authSwitchLink').textContent = 'Se connecter';
+                document.getElementById('authNameGroup').style.display = 'block';
+            }
+            document.getElementById('authError').textContent = '';
+            document.getElementById('authSuccess').textContent = '';
+        }
+
+        function handleAuth(event) {
+            event.preventDefault();
+            const email = document.getElementById('authEmail').value.trim();
+            const password = document.getElementById('authPassword').value;
+            const name = document.getElementById('authName').value.trim() || email.split('@')[0];
+            const errorEl = document.getElementById('authError');
+            const successEl = document.getElementById('authSuccess');
+            const submitBtn = document.getElementById('authSubmit');
+
+            errorEl.textContent = '';
+            successEl.textContent = '';
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Chargement...';
+
+            // Simulation d'authentification (à remplacer par une vraie API)
+            setTimeout(() => {
+                if (isLoginMode) {
+                    // Login
+                    const users = JSON.parse(localStorage.getItem('noxhub_users') || '[]');
+                    const user = users.find(u => u.email === email && u.password === password);
+
+                    if (user) {
+                        currentUser = { email: user.email, name: user.name };
+                        localStorage.setItem('noxhub_user', JSON.stringify(currentUser));
+                        successEl.textContent = 'Connexion réussie !';
+                        updateAuthUI();
+                        closeAuth();
+                        showToast(`Bienvenue ${currentUser.name} !`, 'success');
+                    } else {
+                        errorEl.textContent = 'Email ou mot de passe incorrect.';
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Se connecter';
+                    }
+                } else {
+                    // Register
+                    const users = JSON.parse(localStorage.getItem('noxhub_users') || '[]');
+
+                    if (users.some(u => u.email === email)) {
+                        errorEl.textContent = 'Cet email est déjà utilisé.';
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'S\'inscrire';
+                        return;
+                    }
+
+                    users.push({ email, password, name });
+                    localStorage.setItem('noxhub_users', JSON.stringify(users));
+
+                    currentUser = { email, name };
+                    localStorage.setItem('noxhub_user', JSON.stringify(currentUser));
+                    successEl.textContent = 'Compte créé avec succès !';
+
+                    setTimeout(() => {
+                        updateAuthUI();
+                        closeAuth();
+                        showToast(`Bienvenue ${name} !`, 'success');
+                    }, 800);
+                }
+            }, 800);
+        }
+
+        function logout() {
+            currentUser = null;
+            localStorage.removeItem('noxhub_user');
+            updateAuthUI();
+            showToast('Déconnecté', 'info');
+        }
+
+        function updateAuthUI() {
+            const navBtn = document.getElementById('authNavBtn');
+            if (currentUser) {
+                navBtn.innerHTML = `
+                    <span class="user-info">
+                        <span class="avatar">${currentUser.name.charAt(0).toUpperCase()}</span>
+                        ${currentUser.name}
+                        <span class="logout-btn" onclick="event.stopPropagation(); logout();">✕</span>
+                    </span>
+                `;
+                navBtn.className = '';
+                navBtn.style.background = 'transparent';
+                navBtn.style.padding = '0';
+            } else {
+                navBtn.innerHTML = 'Se connecter';
+                navBtn.className = 'auth-btn';
+                navBtn.style.background = '';
+                navBtn.style.padding = '';
+            }
+        }
 
         // ============================================================
         //  TOAST
@@ -823,7 +1365,7 @@
             toast.className = `toast ${type}`;
             toast.classList.add('show');
             clearTimeout(toast._timeout);
-            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3000);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3500);
         }
 
         // ============================================================
@@ -831,12 +1373,34 @@
         // ============================================================
         window.addEventListener('scroll', () => {
             const navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
+            navbar.classList.toggle('scrolled', window.scrollY > 50);
         });
+
+        // ============================================================
+        //  GENRES
+        // ============================================================
+        function loadGenres() {
+            const container = document.getElementById('genreFilters');
+            const genres = ['Action', 'Aventure', 'Animation', 'Comédie', 'Crime', 'Documentaire',
+                'Drame', 'Familial', 'Fantastique', 'Historique', 'Horreur',
+                'Musical', 'Mystère', 'Romance', 'Science-Fiction', 'Thriller', 'Western'
+            ];
+            container.innerHTML = genres.map(g =>
+                `<button onclick="filterByGenre('${g}')">${g}</button>`
+            ).join('');
+        }
+
+        function filterByGenre(genre) {
+            const filtered = allItems.filter(item => {
+                const itemGenres = item.genre || '';
+                return itemGenres.toLowerCase().includes(genre.toLowerCase());
+            });
+            currentResults = filtered;
+            displayMovies(filtered);
+            document.getElementById('pagination').style.display = 'none';
+            document.getElementById('sectionTitle').textContent = `▸ Genre : ${genre}`;
+            showToast(`Filtre : ${genre}`, 'info');
+        }
 
         // ============================================================
         //  CHARGER LA PAGE D'ACCUEIL
@@ -849,14 +1413,15 @@
             currentMode = 'homepage';
             currentFilter = 'all';
             sectionTitle.textContent = '▸ À la une';
-            grid.innerHTML = '<p style="color:#888; text-align:center; width:100%;">Chargement...</p>';
+            grid.innerHTML = '<div class="spinner"></div>';
 
             try {
                 const response = await fetch(`${HOMEPAGE_API}?apikey=${API_KEY}`);
                 const data = await response.json();
 
                 if (data.status !== 'success') {
-                    grid.innerHTML = `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
+                    grid.innerHTML =
+                    `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
                     return;
                 }
 
@@ -888,6 +1453,7 @@
                 document.getElementById('pagination').style.display = 'none';
                 loadPopularSearches();
                 updateFilters();
+                loadGenres();
 
             } catch (error) {
                 console.error('Erreur:', error);
@@ -904,14 +1470,15 @@
 
             currentMode = 'hot';
             sectionTitle.textContent = '▸ Films et séries populaires';
-            grid.innerHTML = '<p style="color:#888; text-align:center; width:100%;">Chargement...</p>';
+            grid.innerHTML = '<div class="spinner"></div>';
 
             try {
                 const response = await fetch(`${HOT_API}?apikey=${API_KEY}`);
                 const data = await response.json();
 
                 if (data.status !== 'success') {
-                    grid.innerHTML = `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
+                    grid.innerHTML =
+                    `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
                     return;
                 }
 
@@ -923,6 +1490,7 @@
                 document.getElementById('pagination').style.display = 'none';
                 loadPopularSearches();
                 updateFilters();
+                loadGenres();
 
             } catch (error) {
                 console.error('Erreur:', error);
@@ -942,14 +1510,15 @@
             const label = type === 'tv' ? 'Séries' : 'Films';
             sectionTitle.textContent = `▸ ${label} populaires`;
             setActiveNav(type === 'tv' ? 'series' : 'movies');
-            grid.innerHTML = '<p style="color:#888; text-align:center; width:100%;">Chargement...</p>';
+            grid.innerHTML = '<div class="spinner"></div>';
 
             try {
                 const response = await fetch(`${TRENDING_API}?apikey=${API_KEY}&type=${type}&page=1`);
                 const data = await response.json();
 
                 if (data.status !== 'success') {
-                    grid.innerHTML = `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
+                    grid.innerHTML =
+                    `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
                     return;
                 }
 
@@ -959,6 +1528,7 @@
                 document.getElementById('pagination').style.display = 'none';
                 loadPopularSearches();
                 updateFilters();
+                loadGenres();
 
             } catch (error) {
                 console.error('Erreur:', error);
@@ -978,14 +1548,15 @@
             const label = type === 'tv' ? 'Séries' : 'Films';
             sectionTitle.textContent = `▸ Tendances (${label})`;
             setActiveNav(type === 'tv' ? 'series' : 'movies');
-            grid.innerHTML = '<p style="color:#888; text-align:center; width:100%;">Chargement...</p>';
+            grid.innerHTML = '<div class="spinner"></div>';
 
             try {
                 const response = await fetch(`${TRENDING_API}?apikey=${API_KEY}&type=${currentType}&page=1`);
                 const data = await response.json();
 
                 if (data.status !== 'success') {
-                    grid.innerHTML = `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
+                    grid.innerHTML =
+                    `<p style="color:#e50914; text-align:center; width:100%;">Erreur de chargement.</p>`;
                     return;
                 }
 
@@ -995,6 +1566,7 @@
                 document.getElementById('pagination').style.display = 'none';
                 loadPopularSearches();
                 updateFilters();
+                loadGenres();
 
             } catch (error) {
                 console.error('Erreur:', error);
@@ -1021,7 +1593,7 @@
             currentQuery = query;
             currentPage = 1;
 
-            grid.innerHTML = '<p style="color:#888; text-align:center; width:100%;">Recherche en cours...</p>';
+            grid.innerHTML = '<div class="spinner"></div>';
 
             try {
                 const url =
@@ -1030,7 +1602,8 @@
                 const data = await response.json();
 
                 if (data.status !== 'success') {
-                    grid.innerHTML = `<p style="color:#e50914; text-align:center; width:100%;">Erreur : ${data.message || 'API non disponible'}</p>`;
+                    grid.innerHTML =
+                        `<p style="color:#e50914; text-align:center; width:100%;">Erreur : ${data.message || 'API non disponible'}</p>`;
                     return;
                 }
 
@@ -1049,20 +1622,22 @@
 
                 const sectionTitle = document.getElementById('sectionTitle');
                 if (items.length > 0) {
-                    sectionTitle.textContent = `▸ Résultats pour "${query}" (${totalCount} trouvé${totalCount > 1 ? 's' : ''})`;
+                    sectionTitle.textContent =
+                        `▸ Résultats pour "${query}" (${totalCount} trouvé${totalCount > 1 ? 's' : ''})`;
                 } else {
                     sectionTitle.textContent = `▸ Aucun résultat pour "${query}"`;
                 }
                 updateFilters();
+                loadGenres();
 
-                // Sauvegarder la recherche populaire
+                // Sauvegarder la recherche
                 try {
                     await fetch(`${POPULAR_API}?apikey=${API_KEY}&search=${encodeURIComponent(query)}`, { method: 'POST' });
                 } catch (e) {}
 
             } catch (error) {
                 console.error('Erreur API:', error);
-                grid.innerHTML = '<p style="color:#e50914; text-align:center; width:100%;">Erreur de connexion à l\'API.</p>';
+                grid.innerHTML = '<p style="color:#e50914; text-align:center; width:100%;">Erreur de connexion.</p>';
             }
         }
 
@@ -1089,8 +1664,7 @@
         //  FILTRES
         // ============================================================
         function updateFilters() {
-            const buttons = document.querySelectorAll('.filters button');
-            buttons.forEach(btn => {
+            document.querySelectorAll('.filters button').forEach(btn => {
                 btn.classList.toggle('active', btn.dataset.filter === currentFilter);
             });
         }
@@ -1143,11 +1717,12 @@
                 const genre = item.genre || 'Divers';
                 const rating = item.imdbRatingValue || '?';
                 const subjectType = item.subjectType === 2 ? 'Série' : 'Film';
-                const isInList = myList.some(id => id === item.subjectId || id === item.id);
+                const id = item.subjectId || item.id;
+                const isInList = myList.some(mid => mid === id);
 
                 html += `
                     <div class="movie-card" onclick="openDetail('${encodeURIComponent(JSON.stringify(item))}')">
-                        ${isInList ? '<div class="badge">⭐ Dans ma liste</div>' : ''}
+                        ${isInList ? '<div class="badge">★ Dans ma liste</div>' : ''}
                         <div class="rating-badge">★ ${rating}</div>
                         <img src="${coverUrl}" alt="${title}" loading="lazy" onerror="this.src='https://via.placeholder.com/200x280/333/666?text=No+Image'">
                         <div class="info">
@@ -1216,12 +1791,17 @@
                 btnWatch.classList.remove('loading');
 
                 const btnAddList = document.getElementById('btnAddList');
-                const isInList = myList.some(id => id === id);
-                btnAddList.textContent = isInList ? '✅ Dans ma liste' : '➕ Ajouter à ma liste';
+                const isInList = myList.some(mid => mid === id);
+                btnAddList.textContent = isInList ? '★ Dans ma liste' : '+ Ajouter à ma liste';
                 btnAddList.classList.toggle('added', isInList);
 
-                document.getElementById('watchMessage').textContent = '';
+                // Afficher la note de l'utilisateur
+                const userRating = userRatings[id] || 0;
+                document.querySelectorAll('#ratingStars span').forEach((star, index) => {
+                    star.classList.toggle('active', index < userRating);
+                });
 
+                document.getElementById('watchMessage').textContent = '';
                 document.getElementById('detailPage').classList.add('active');
                 document.body.style.overflow = 'hidden';
 
@@ -1281,18 +1861,17 @@
 
             if (index > -1) {
                 myList.splice(index, 1);
-                btn.textContent = '➕ Ajouter à ma liste';
+                btn.textContent = '+ Ajouter à ma liste';
                 btn.classList.remove('added');
                 showToast('Retiré de votre liste', 'info');
             } else {
                 myList.push(id);
-                btn.textContent = '✅ Dans ma liste';
+                btn.textContent = '★ Dans ma liste';
                 btn.classList.add('added');
                 showToast('Ajouté à votre liste !', 'success');
             }
 
             localStorage.setItem('noxhub_mylist', JSON.stringify(myList));
-            // Rafraîchir la grille
             displayMovies(currentResults);
         }
 
@@ -1325,10 +1904,71 @@
         }
 
         // ============================================================
+        //  HISTORIQUE
+        // ============================================================
+        function addToHistory(item) {
+            const id = item.subjectId || item.id;
+            history = history.filter(h => h.id !== id);
+            history.unshift({
+                id: id,
+                title: item.title,
+                cover: item.cover?.url || '',
+                watchedAt: new Date().toISOString()
+            });
+            if (history.length > 50) history.pop();
+            localStorage.setItem('noxhub_history', JSON.stringify(history));
+        }
+
+        function showHistory() {
+            const grid = document.getElementById('movieGrid');
+            const sectionTitle = document.getElementById('sectionTitle');
+
+            setActiveNav('history');
+            sectionTitle.textContent = '▸ Historique de visionnage';
+
+            if (history.length === 0) {
+                grid.innerHTML = '<p style="color:#888; text-align:center; width:100%;">Aucun historique.</p>';
+                document.getElementById('pagination').style.display = 'none';
+                return;
+            }
+
+            const historyItems = history.map(h => {
+                const found = allItems.find(item => (item.subjectId || item.id) === h.id);
+                return found || { title: h.title, cover: { url: h.cover } };
+            }).filter(Boolean);
+
+            displayMovies(historyItems);
+            document.getElementById('pagination').style.display = 'none';
+        }
+
+        // ============================================================
+        //  NOTATION
+        // ============================================================
+        function rateItem(rating) {
+            if (!selectedItem) return;
+            const id = selectedItem.subjectId || selectedItem.id;
+            userRatings[id] = rating;
+            localStorage.setItem('noxhub_ratings', JSON.stringify(userRatings));
+
+            document.querySelectorAll('#ratingStars span').forEach((star, index) => {
+                star.classList.toggle('active', index < rating);
+            });
+
+            showToast(`Noté ${rating} ★`, 'success');
+        }
+
+        // ============================================================
         //  LECTEUR VIDÉO
         // ============================================================
         async function watchVideo() {
             if (!selectedItem) return;
+
+            // Vérifier si l'utilisateur est connecté
+            if (!currentUser) {
+                showToast('Connectez-vous pour regarder', 'error');
+                openAuth();
+                return;
+            }
 
             const btnWatch = document.getElementById('btnWatch');
             const msg = document.getElementById('watchMessage');
@@ -1390,6 +2030,9 @@
                     return;
                 }
 
+                // Ajouter à l'historique
+                addToHistory(selectedItem);
+
                 closeDetail();
                 openPlayer(videoUrl, selectedItem.title);
 
@@ -1404,27 +2047,96 @@
         }
 
         // ============================================================
-        //  BANDE-ANNONCE (simulé)
+        //  BANDE-ANNONCE
         // ============================================================
         function watchTrailer() {
             if (!selectedItem) return;
-            // Dans un cas réel, on chercherait un lien YouTube
-            showToast('Fonctionnalité de bande-annonce en cours de développement', 'info');
+            // Recherche simulée - à connecter à une vraie API YouTube
+            showToast('Fonctionnalité de bande-annonce en développement', 'info');
         }
 
         // ============================================================
         //  LECTEUR
         // ============================================================
+        let videoPlayer = null;
+        let isPlaying = false;
+
         function openPlayer(videoUrl, title) {
             const page = document.getElementById('playerPage');
             const video = document.getElementById('videoPlayer');
             const titleEl = document.getElementById('playerTitle');
 
+            videoPlayer = video;
             video.src = videoUrl;
             titleEl.textContent = title || 'Lecture en cours';
             page.classList.add('active');
             video.load();
-            video.play();
+
+            // Configurer la progression
+            setupPlayerControls();
+
+            video.play().then(() => {
+                isPlaying = true;
+                document.getElementById('playPauseBtn').textContent = '⏸';
+            }).catch(() => {
+                isPlaying = false;
+                document.getElementById('playPauseBtn').textContent = '▶';
+            });
+        }
+
+        function setupPlayerControls() {
+            const video = document.getElementById('videoPlayer');
+            const progressFill = document.getElementById('progressFill');
+            const progressBar = document.getElementById('playerProgress');
+            const timeDisplay = document.getElementById('timeDisplay');
+
+            video.addEventListener('timeupdate', () => {
+                if (video.duration) {
+                    const percent = (video.currentTime / video.duration) * 100;
+                    progressFill.style.width = `${percent}%`;
+                    timeDisplay.textContent = `${formatTime(video.currentTime)} / ${formatTime(video.duration)}`;
+                }
+            });
+
+            progressBar.addEventListener('click', (e) => {
+                const rect = progressBar.getBoundingClientRect();
+                const pos = (e.clientX - rect.left) / rect.width;
+                video.currentTime = pos * video.duration;
+            });
+
+            video.addEventListener('play', () => {
+                isPlaying = true;
+                document.getElementById('playPauseBtn').textContent = '⏸';
+            });
+
+            video.addEventListener('pause', () => {
+                isPlaying = false;
+                document.getElementById('playPauseBtn').textContent = '▶';
+            });
+        }
+
+        function togglePlayPause() {
+            if (!videoPlayer) return;
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+            } else {
+                videoPlayer.pause();
+            }
+        }
+
+        function formatTime(seconds) {
+            const m = Math.floor(seconds / 60);
+            const s = Math.floor(seconds % 60);
+            return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+        }
+
+        function toggleFullscreen() {
+            const video = document.getElementById('videoPlayer');
+            if (!document.fullscreenElement) {
+                video.requestFullscreen().catch(() => showToast('Mode plein écran indisponible', 'error'));
+            } else {
+                document.exitFullscreen();
+            }
         }
 
         function closePlayer() {
@@ -1433,6 +2145,7 @@
             video.pause();
             video.src = '';
             page.classList.remove('active');
+            videoPlayer = null;
         }
 
         // ============================================================
@@ -1449,31 +2162,51 @@
         // ============================================================
         document.addEventListener('DOMContentLoaded', function() {
             loadHomepage();
+            updateAuthUI();
 
             document.getElementById('searchInput').addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') searchMovies();
             });
 
+            // Raccourcis clavier
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') {
                     if (document.getElementById('playerPage').classList.contains('active')) {
                         closePlayer();
-                    } else {
+                    } else if (document.getElementById('detailPage').classList.contains('active')) {
                         closeDetail();
+                    } else if (document.getElementById('authOverlay').classList.contains('active')) {
+                        closeAuth();
                     }
                 }
-            });
 
-            // Navigation avec les touches
-            document.addEventListener('keydown', function(e) {
+                // Contrôles du lecteur
+                if (document.getElementById('playerPage').classList.contains('active')) {
+                    if (e.key === ' ' || e.key === 'Space') {
+                        e.preventDefault();
+                        togglePlayPause();
+                    }
+                    if (e.key === 'f' || e.key === 'F') {
+                        toggleFullscreen();
+                    }
+                    if (e.key === 'ArrowRight') {
+                        if (videoPlayer) videoPlayer.currentTime += 10;
+                    }
+                    if (e.key === 'ArrowLeft') {
+                        if (videoPlayer) videoPlayer.currentTime -= 10;
+                    }
+                }
+
+                // Navigation
                 if (e.ctrlKey && e.key === '1') loadHomepage();
                 if (e.ctrlKey && e.key === '2') loadCategory('movie');
                 if (e.ctrlKey && e.key === '3') loadCategory('tv');
                 if (e.ctrlKey && e.key === '4') showMyList();
+                if (e.ctrlKey && e.key === '5') showHistory();
             });
         });
 
-        // Rendre les fonctions globales
+        // Exposer les fonctions globales
         window.loadHomepage = loadHomepage;
         window.loadTrending = loadTrending;
         window.loadCategory = loadCategory;
@@ -1484,12 +2217,21 @@
         window.closeDetail = closeDetail;
         window.watchVideo = watchVideo;
         window.watchTrailer = watchTrailer;
-        window.watchVideo = watchVideo;
         window.openPlayer = openPlayer;
         window.closePlayer = closePlayer;
         window.applyFilter = applyFilter;
         window.toggleMyList = toggleMyList;
         window.showMyList = showMyList;
+        window.showHistory = showHistory;
+        window.rateItem = rateItem;
+        window.filterByGenre = filterByGenre;
+        window.openAuth = openAuth;
+        window.closeAuth = closeAuth;
+        window.handleAuth = handleAuth;
+        window.toggleAuthMode = toggleAuthMode;
+        window.logout = logout;
+        window.togglePlayPause = togglePlayPause;
+        window.toggleFullscreen = toggleFullscreen;
         window.showToast = showToast;
     </script>
 
