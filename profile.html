@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NOX HUB - Profil</title>
+    <link rel="icon" type="image/png" href="https://files.catbox.moe/sfpupx.png">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #141414;
+            color: #fff;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #141414; }
+        ::-webkit-scrollbar-thumb { background: #e50914; border-radius: 4px; }
+
+        .navbar {
+            background: rgba(20,20,20,0.98);
+            padding: 12px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.8);
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+        .logo img { height: 40px; width: auto; border-radius: 8px; }
+        .logo-text {
+            font-size: 28px;
+            font-weight: 900;
+            color: #e50914;
+            letter-spacing: 2px;
+        }
+        .logo-text span { color: #fff; font-weight: 300; }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+        .nav-links a {
+            color: #b3b3b3;
+            font-size: 14px;
+            transition: 0.3s;
+            cursor: pointer;
+            position: relative;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        .nav-links a:hover { color: #fff; }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #e50914;
+            transition: width 0.3s;
+        }
+        .nav-links a:hover::after,
+        .nav-links a.active::after { width: 100%; }
+        .nav-links a.active { color: #fff; }
+        .nav-links .user-info {
+            color: #fff;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .nav-links .user-info .avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #e50914;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 14px;
+            overflow: hidden;
+        }
+        .nav-links .user-info .avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .nav-links .user-info .logout-btn {
+            color: #888;
+            cursor: pointer;
+            font-size: 12px;
+            transition: 0.3s;
+        }
+        .nav-links .user-info .logout-btn:hover { color: #e50914; }
+
+        .main-content {
+            padding-top: 80px;
+            padding: 100px 60px 40px;
+            min-height: 100vh;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #1a1a1a;
+            border-radius: 16px;
+            border: 1px solid #333;
+        }
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: #e50914;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: 900;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-info h1 { font-size: 28px; margin-bottom: 5px; }
+        .profile-info .email { color: #888; font-size: 16px; }
+        .profile-info .member-since { color: #666; font-size: 14px; margin-top: 5px; }
+
+        .profile-section {
+            background: #1a1a1a;
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid #333;
+            margin-bottom: 20px;
+        }
+        .profile-section h2 {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #e50914;
+        }
+        .profile-section .form-group {
+            margin-bottom: 18px;
+        }
+        .profile-section .form-group label {
+            display: block;
+            color: #ccc;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+        .profile-section .form-group input {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            border: 1px solid #333;
+            background: #2a2a2a;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+            transition: 0.3s;
+        }
+        .profile-section .form-group input:focus {
+            border-color: #e50914;
+            box-shadow: 0 0 0 2px rgba(229,9,20,0.3);
+        }
+        .profile-section .form-group input:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .btn-save {
+            padding: 12px 35px;
+            border-radius: 8px;
+            border: none;
+            background: #e50914;
+            color: #fff;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-save:hover { background: #f40612; transform: scale(1.02); }
+        .btn-danger {
+            padding: 12px 35px;
+            border-radius: 8px;
+            border: 1px solid #e50914;
+            background: transparent;
+            color: #e50914;
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-left: 10px;
+        }
+        .btn-danger:hover { background: #e50914; color: #fff; }
+
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #2a2a2a;
+            color: #fff;
+            padding: 15px 25px;
+            border-radius: 10px;
+            z-index: 999;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: 0.4s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+            font-size: 14px;
+            max-width: 350px;
+        }
+        .toast.show { transform: translateY(0); opacity: 1; }
+        .toast.success { border-left: 4px solid #4CAF50; }
+        .toast.error { border-left: 4px solid #e50914; }
+        .toast.info { border-left: 4px solid #2196F3; }
+
+        @media (max-width: 768px) {
+            .main-content { padding: 80px 20px 30px; }
+            .navbar { padding: 10px 20px; }
+            .logo img { height: 30px; }
+            .logo-text { font-size: 20px; }
+            .nav-links { gap: 10px; }
+            .nav-links a { font-size: 11px; }
+            .profile-header { flex-direction: column; text-align: center; }
+        }
+        @media (max-width: 480px) {
+            .logo-text { font-size: 16px; }
+            .logo img { height: 25px; }
+            .nav-links a { font-size: 9px; }
+            .profile-avatar { width: 70px; height: 70px; font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ===== TOAST ===== -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ===== NAVBAR ===== -->
+    <nav class="navbar">
+        <div class="logo" onclick="window.location.href='index.html'">
+            <img src="https://files.catbox.moe/sfpupx.png" alt="NOX HUB">
+            <span class="logo-text">NOX <span>HUB</span></span>
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Accueil</a>
+            <a href="dashboard.html">Tableau de bord</a>
+            <a class="active" href="profile.html">Profil</a>
+            <a href="support.html">Support</a>
+            <span class="user-info" id="userInfo">
+                <span class="avatar" id="userAvatar">U</span>
+                <span id="userName">Utilisateur</span>
+                <span class="logout-btn" onclick="logout()">✕</span>
+            </span>
+        </div>
+    </nav>
+
+    <!-- ===== MAIN ===== -->
+    <div class="main-content">
+        <div class="profile-header">
+            <div class="profile-avatar" id="profileAvatar">U</div>
+            <div class="profile-info">
+                <h1 id="profileName">Utilisateur</h1>
+                <div class="email" id="profileEmail">utilisateur@email.com</div>
+                <div class="member-since">Membre depuis 2026</div>
+            </div>
+        </div>
+
+        <div class="profile-section">
+            <h2>📝 Informations personnelles</h2>
+            <div class="form-group">
+                <label for="editName">Nom d'utilisateur</label>
+                <input type="text" id="editName" placeholder="Votre nom">
+            </div>
+            <div class="form-group">
+                <label for="editEmail">Adresse email</label>
+                <input type="email" id="editEmail" placeholder="votre@email.com" disabled>
+            </div>
+            <button class="btn-save" onclick="saveProfile()">💾 Enregistrer</button>
+        </div>
+
+        <div class="profile-section">
+            <h2>🔐 Sécurité</h2>
+            <div class="form-group">
+                <label for="editPassword">Nouveau mot de passe</label>
+                <input type="password" id="editPassword" placeholder="Nouveau mot de passe" minlength="6">
+            </div>
+            <div class="form-group">
+                <label for="editConfirmPassword">Confirmer le mot de passe</label>
+                <input type="password" id="editConfirmPassword" placeholder="Confirmer le mot de passe">
+            </div>
+            <button class="btn-save" onclick="changePassword()">🔑 Changer le mot de passe</button>
+        </div>
+
+        <div class="profile-section" style="border-color:#e50914;">
+            <h2 style="color:#e50914;">⚠️ Zone dangereuse</h2>
+            <button class="btn-danger" onclick="deleteAccount()">🗑️ Supprimer mon compte</button>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = JSON.parse(localStorage.getItem('noxhub_user') || 'null');
+
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => toast.classList.remove('show'), 3500);
+        }
+
+        function logout() {
+            localStorage.removeItem('noxhub_user');
+            window.location.href = 'login.html';
+        }
+
+        function updateProfileUI() {
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            document.getElementById('profileName').textContent = currentUser.name;
+            document.getElementById('profileEmail').textContent = currentUser.email;
+
+            const avatar = document.getElementById('profileAvatar');
+            if (currentUser.avatar) {
+                avatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}">`;
+            } else {
+                avatar.textContent = currentUser.name.charAt(0).toUpperCase();
+            }
+
+            const navAvatar = document.getElementById('userAvatar');
+            if (currentUser.avatar) {
+                navAvatar.innerHTML = `<img src="${currentUser.avatar}" alt="${currentUser.name}">`;
+            } else {
+                navAvatar.textContent = currentUser.name.charAt(0).toUpperCase();
+            }
+            document.getElementById('userName').textContent = currentUser.name;
+
+            document.getElementById('editName').value = currentUser.name;
+            document.getElementById('editEmail').value = currentUser.email;
+        }
+
+        function saveProfile() {
+            const newName = document.getElementById('editName').value.trim();
+            if (!newName) {
+                showToast('Le nom ne peut pas être vide', 'error');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('noxhub_users') || '[]');
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            if (userIndex > -1) {
+                users[userIndex].name = newName;
+                localStorage.setItem('noxhub_users', JSON.stringify(users));
+            }
+
+            currentUser.name = newName;
+            localStorage.setItem('noxhub_user', JSON.stringify(currentUser));
+            updateProfileUI();
+            showToast('Profil mis à jour !', 'success');
+        }
+
+        function changePassword() {
+            const password = document.getElementById('editPassword').value;
+            const confirm = document.getElementById('editConfirmPassword').value;
+
+            if (!password || password.length < 6) {
+                showToast('Le mot de passe doit contenir au moins 6 caractères', 'error');
+                return;
+            }
+
+            if (password !== confirm) {
+                showToast('Les mots de passe ne correspondent pas', 'error');
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('noxhub_users') || '[]');
+            const userIndex = users.findIndex(u => u.email === currentUser.email);
+            if (userIndex > -1) {
+                users[userIndex].password = password;
+                localStorage.setItem('noxhub_users', JSON.stringify(users));
+            }
+
+            document.getElementById('editPassword').value = '';
+            document.getElementById('editConfirmPassword').value = '';
+            showToast('Mot de passe changé !', 'success');
+        }
+
+        function deleteAccount() {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.')) {
+                return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('noxhub_users') || '[]');
+            const filtered = users.filter(u => u.email !== currentUser.email);
+            localStorage.setItem('noxhub_users', JSON.stringify(filtered));
+
+            localStorage.removeItem('noxhub_user');
+            localStorage.removeItem('noxhub_mylist');
+            localStorage.removeItem('noxhub_history');
+            localStorage.removeItem('noxhub_ratings');
+
+            showToast('Compte supprimé', 'info');
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 1000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!currentUser) {
+                window.location.href = 'login.html';
+                return;
+            }
+            updateProfileUI();
+        });
+    </script>
+
+</body>
+</html>
